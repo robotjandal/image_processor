@@ -20,7 +20,19 @@ public:
 
 private:
   IMAGE_ACTIONS action_;
-  string string_arg_;
+  map <string,string> attributes_;
+};
+
+class ActionFactory {
+public:
+  ActionFactory(string action) : string_action_{action} {};
+  ImageAction *generate_action();
+
+private:
+  IMAGE_ACTIONS action_;
+  string string_action_;
+
+  void find_action_type();
 };
 
 #endif

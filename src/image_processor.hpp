@@ -10,23 +10,16 @@ using namespace std;
 
 class ImageProcessor {
 public:
+  ImageProcessor(string input_file) : file_path_{input_file} {};
   bool run();
   bool perform_actions();
 
 private:
   vector<ImageAction *> actions_list_;
-};
+  string file_path_;
 
-class ActionFactory {
-public:
-  ActionFactory(string action) : string_action_{action} {};
-  ImageAction *generate_action();
-
-private:
-  IMAGE_ACTIONS action_;
-  string string_action_;
-
-  void find_action_type();
+  bool is_yaml();
+  void parse_file();
 };
 
 #endif // CMAKE_IMAGEPROCESSOR_H

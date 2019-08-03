@@ -7,8 +7,18 @@
 
 #include "image_processor.hpp"
 
-int main() {
-  ImageProcessor ip;
+static const char *const USAGE = "usage: ./play_image <yaml_path>\n";
+static const std::string OUTPUT_FOLDER = "output";
+
+int main(int argc, const char *argv[]) {
+  // one parameter must be supplied
+  bool is_ready;
+  if (argc != 2) {
+    std::cout << USAGE;
+    return -1;
+  }
+  std::string file_path = argv[1];
+  ImageProcessor ip(file_path);
   if (ip.run()) {
     std::cout << "Run Successful" << std::endl;
     return 0;

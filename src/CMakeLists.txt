@@ -1,3 +1,16 @@
+find_package(yaml-cpp REQUIRED)
+find_package( Boost 1.65
+    REQUIRED
+    COMPONENTS
+        system
+        filesystem
+)
+
+add_library(parse_yaml
+    parse_yaml.hpp
+    parse_yaml.cpp
+)
+
 add_library(processor 
     image_processor.hpp
     image_processor.cpp
@@ -13,8 +26,14 @@ add_executable(image_process
 )
 
 target_link_libraries(image_process 
-    processor 
-    action
+    PUBLIC    
+        processor 
+        action
+        parse_yaml
+    PRIVATE
+        yaml-cpp
+        ${Boost_LIBRARIES}
+
  )
 
 install(

@@ -13,6 +13,6 @@ This application will process an input image through a series of actions defined
 
 ## Run
 
-    $ ./build/analyse_image
+    $ ./build/analyse_image <yaml path>
 
 
