@@ -17,8 +17,9 @@ public:
 private:
   string file_path_;
   vector<ImageAction *> *actions_list_;
-
-  void parse_actions(YAML::Node config);
+  
+  void parse_initial(YAML::Node &config);
+  void parse_actions(YAML::Node &config);
 };
 
 #endif // CMAKE_PARSEYAML_H
