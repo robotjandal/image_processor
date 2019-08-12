@@ -3,29 +3,30 @@
 #include <iostream>
 
 #include <boost/filesystem.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace std;
 
-void initialise(string input_file, string output_folder);
-void save();
-void histogram();
+void initialise(cv::Mat &image, string input_file, string output_folder);
+void save(cv::Mat &image);
+void grey(cv::Mat &image);
 
 // Image Action
 ////
 
 // Process action based on IMAGE_ACTIONS action
-void ImageAction::process() {
+void ImageAction::process(cv::Mat &image) {
   cout << "Processing Action: ";
 
   switch (action_) {
   case IMAGE_ACTIONS::E_INITIALISE:
-    initialise(input_file_, output_folder_);
+    initialise(image, input_file_, output_folder_);
     break;
   case IMAGE_ACTIONS::E_SAVE:
-    save();
+    save(image);
     break;
-  case IMAGE_ACTIONS::E_HISTOGRAM:
-    histogram();
+  case IMAGE_ACTIONS::E_CONVERTGREY:
+    grey(image);
     break;
   case IMAGE_ACTIONS::E_NOACTION:
   default:
@@ -58,8 +59,8 @@ void ActionFactory::find_action_type() {
     action_ = IMAGE_ACTIONS::E_INITIALISE;
   else if (string_action_ == "save")
     action_ = IMAGE_ACTIONS::E_SAVE;
-  else if (string_action_ == "histogram")
-    action_ = IMAGE_ACTIONS::E_HISTOGRAM;
+  else if (string_action_ == "grey")
+    action_ = IMAGE_ACTIONS::E_CONVERTGREY;
   else {
     action_ = IMAGE_ACTIONS::E_NOACTION;
     cout << "Cannot understand action: " << string_action_ << endl;
@@ -72,7 +73,7 @@ void ActionFactory::find_action_type() {
 // Set up steps for input file and output folder
 // * input file is set
 // * output folder is set
-void initialise(string file, string output_folder) {
+void initialise(cv::Mat &image, string file, string output_folder) {
   cout << "Initial setup before processing image actions" << endl;
   cout << "File path: " << file << ". Output folder: " << output_folder << endl;
   
@@ -80,10 +81,23 @@ void initialise(string file, string output_folder) {
     boost::filesystem::remove_all(output_folder);
     boost::filesystem::create_directories(output_folder);
   }
+
+  image = cv::imread(file, cv::IMREAD_COLOR);
 }
 
 // Save image to file
-void save() { cout << "Saving image" << endl; }
+void save(cv::Mat &image) { 
+  cout << "Saving image" << endl; 
+  if (cv::imwrite("outputfile.jpg", image))
+    return;
+  // Future raise exception
+}
 
 // Create histogram
-void histogram() { cout << "saving histogram" << endl; }
+void grey(cv::Mat &image) {
+  cv::Mat grey;
+  cout << "converting to greyscale" << endl; 
+  cv::cvtColor(image, grey, cv::COLOR_BGR2GRAY);
+  image = grey;
+}
+

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "image_action.hpp"
+#include "opencv2/opencv.hpp"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
 private:
   vector<ImageAction *> actions_list_;
   string file_path_;
+  cv::Mat image_;  
 
   bool is_yaml();
   void parse_file();

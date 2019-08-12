@@ -22,7 +22,7 @@ bool ImageProcessor::run() {
 bool ImageProcessor::perform_actions() {
   cout << "Performing actions" << endl;
   for (auto action : actions_list_) {
-    action->process();
+    action->process(image_);
     // when replaced with a unique_ptr this line can go:
     delete action;
   }

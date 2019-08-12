@@ -2,4 +2,5 @@ image: <path to image file>
 output: <path to output folder>
 actions:
   - save
-  - histogram
+  - grey
+  - save

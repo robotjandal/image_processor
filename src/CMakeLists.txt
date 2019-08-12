@@ -5,6 +5,8 @@ find_package( Boost 1.65
         system
         filesystem
 )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_library(parse_yaml
     parse_yaml.hpp
@@ -32,6 +34,7 @@ target_link_libraries(image_process
         parse_yaml
     PRIVATE
         yaml-cpp
+        ${OpenCV_LIBS}
         ${Boost_LIBRARIES}
 
  )
