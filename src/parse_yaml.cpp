@@ -4,6 +4,8 @@
 
 using namespace std;
 
+namespace ImageProcessor {
+
 // Parse Yaml
 ////
 
@@ -38,3 +40,4 @@ void ParseYaml::parse_actions(YAML::Node &config) {
   }
   return;
 }
+} // namespace ImageProcessor

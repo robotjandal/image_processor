@@ -3,9 +3,12 @@
 #include <iostream>
 
 #include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
 using namespace std;
+
+namespace ImageProcessor {
 
 void initialise(cv::Mat &image, string input_file, string output_folder);
 void save(cv::Mat &image);
@@ -16,7 +19,7 @@ void grey(cv::Mat &image);
 
 // Process action based on IMAGE_ACTIONS action
 void ImageAction::process(cv::Mat &image) {
-  cout << "Processing Action: ";
+  BOOST_LOG_TRIVIAL(debug) << "Processing Action: ";
 
   switch (action_) {
   case IMAGE_ACTIONS::E_INITIALISE:
@@ -30,7 +33,7 @@ void ImageAction::process(cv::Mat &image) {
     break;
   case IMAGE_ACTIONS::E_NOACTION:
   default:
-    cout << "Unrecognised action" << endl;
+    BOOST_LOG_TRIVIAL(debug) << "Unrecognised action";
     break;
   }
 }
@@ -63,7 +66,7 @@ void ActionFactory::find_action_type() {
     action_ = IMAGE_ACTIONS::E_CONVERTGREY;
   else {
     action_ = IMAGE_ACTIONS::E_NOACTION;
-    cout << "Cannot understand action: " << string_action_ << endl;
+    BOOST_LOG_TRIVIAL(debug) << "Cannot process action: " << string_action_;
   }
 }
 
@@ -74,10 +77,10 @@ void ActionFactory::find_action_type() {
 // * input file is set
 // * output folder is set
 void initialise(cv::Mat &image, string file, string output_folder) {
-  cout << "Initial setup before processing image actions" << endl;
-  cout << "File path: " << file << ". Output folder: " << output_folder << endl;
-  
-  if(!boost::filesystem::exists(output_folder)) {
+  BOOST_LOG_TRIVIAL(debug) << "Initial setup before processing image actions";
+  BOOST_LOG_TRIVIAL(debug) << "File path: " << file << ". Output folder: " << output_folder;
+
+  if (!boost::filesystem::exists(output_folder)) {
     boost::filesystem::remove_all(output_folder);
     boost::filesystem::create_directories(output_folder);
   }
@@ -86,9 +89,9 @@ void initialise(cv::Mat &image, string file, string output_folder) {
 }
 
 // Save image to file
-void save(cv::Mat &image) { 
-  cout << "Saving image" << endl; 
-  if (cv::imwrite("outputfile.jpg", image))
+void save(cv::Mat &image) {
+  BOOST_LOG_TRIVIAL(debug) << "Saving image";
+  if (cv::imwrite("output/output.jpg", image))
     return;
   // Future raise exception
 }
@@ -96,8 +99,9 @@ void save(cv::Mat &image) {
 // Create histogram
 void grey(cv::Mat &image) {
   cv::Mat grey;
-  cout << "converting to greyscale" << endl; 
+  BOOST_LOG_TRIVIAL(debug) << "converting to greyscale";
   cv::cvtColor(image, grey, cv::COLOR_BGR2GRAY);
   image = grey;
 }
 
+} // namespace ImageProcessor

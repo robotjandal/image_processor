@@ -6,20 +6,21 @@
 #include "image_action.hpp"
 #include <yaml-cpp/yaml.h>
 
-using namespace std;
+namespace ImageProcessor {
 
 class ParseYaml {
 public:
-  ParseYaml(string input_file, vector<ImageAction *> &actions_list)
+  ParseYaml(std::string input_file, std::vector<ImageAction *> &actions_list)
       : file_path_{input_file}, actions_list_{&actions_list} {};
   void parse();
 
 private:
-  string file_path_;
-  vector<ImageAction *> *actions_list_;
-  
+  std::string file_path_;
+  std::vector<ImageAction *> *actions_list_;
+
   void parse_initial(YAML::Node &config);
   void parse_actions(YAML::Node &config);
 };
+} // namespace ImageProcessor
 
 #endif // CMAKE_PARSEYAML_H

@@ -1,9 +1,10 @@
 find_package(yaml-cpp REQUIRED)
-find_package( Boost 1.65
+find_package( Boost 
     REQUIRED
     COMPONENTS
         system
         filesystem
+        log
 )
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
@@ -35,8 +36,9 @@ target_link_libraries(image_process
     PRIVATE
         yaml-cpp
         ${OpenCV_LIBS}
-        ${Boost_LIBRARIES}
-
+        Boost::system
+        Boost::filesystem
+        Boost::log
  )
 
 install(

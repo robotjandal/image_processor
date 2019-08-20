@@ -5,10 +5,29 @@
 #include "boost/filesystem.hpp"
 #include "parse_yaml.hpp"
 
+#include "boost/log/core.hpp"
+#include "boost/log/trivial.hpp"
+#include "boost/log/utility/setup/file.hpp"
+#include "boost/log/sources/severity_logger.hpp"
+
 using namespace std;
+
+namespace ImageProcessor {
 
 // Image Processor
 ////
+
+// Set up logging
+bool ImageProcessor::initialise() {
+  namespace logging = boost::log;
+  
+  logging::add_file_log("output/processor.log");
+
+  logging::core::get()->set_filter(logging::trivial::severity >=
+                                   logging::trivial::trace);
+  
+  return true;
+}
 
 // Generate and process a list of actions
 bool ImageProcessor::run() {
@@ -47,3 +66,5 @@ bool ImageProcessor::is_yaml() {
   cout << "Print input file extension: " << extension << endl;
   return (extension == string(".yaml"));
 }
+
+} // namespace ImageProcessor

@@ -5,23 +5,26 @@
 #include <vector>
 
 #include "image_action.hpp"
-#include "opencv2/opencv.hpp"
+#include "opencv4/opencv2/opencv.hpp"
 
-using namespace std;
+namespace ImageProcessor {
 
 class ImageProcessor {
 public:
-  ImageProcessor(string input_file) : file_path_{input_file} {};
+  ImageProcessor(std::string input_file) : file_path_{input_file} {};
+  bool initialise();
   bool run();
   bool perform_actions();
 
 private:
-  vector<ImageAction *> actions_list_;
-  string file_path_;
-  cv::Mat image_;  
+  std::vector<ImageAction *> actions_list_;
+  std::string file_path_;
+  cv::Mat image_;
 
   bool is_yaml();
   void parse_file();
 };
+
+} // namespace ImageProcessor
 
 #endif // CMAKE_IMAGEPROCESSOR_H
