@@ -1,8 +1,6 @@
 #ifndef CMAKE_PARSEYAML_H
 #define CMAKE_PARSEYAML_H
 
-#include <string>
-
 #include "image_action.hpp"
 #include <yaml-cpp/yaml.h>
 
@@ -10,13 +8,12 @@ namespace ImageProcessor {
 
 class ParseYaml {
 public:
-  ParseYaml(std::string input_file, std::vector<ImageAction *> &actions_list)
-      : file_path_{input_file}, actions_list_{&actions_list} {};
-  void parse();
+  ParseYaml(std::string input_file) : file_path_{input_file} {};
+  std::vector<std::unique_ptr<ImageAction>> parse();
 
 private:
-  std::string file_path_;
-  std::vector<ImageAction *> *actions_list_;
+  const std::string file_path_;
+  std::vector<std::unique_ptr<ImageAction>> actions_list_;
 
   void parse_initial(YAML::Node &config);
   void parse_actions(YAML::Node &config);

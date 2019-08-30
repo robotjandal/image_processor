@@ -20,12 +20,12 @@ namespace ImageProcessor {
 // Set up logging
 bool ImageProcessor::initialise() {
   namespace logging = boost::log;
-  
+
   logging::add_file_log("output/processor.log");
 
   logging::core::get()->set_filter(logging::trivial::severity >=
                                    logging::trivial::trace);
-  
+
   return true;
 }
 
@@ -40,20 +40,20 @@ bool ImageProcessor::run() {
 // process action from list
 bool ImageProcessor::perform_actions() {
   cout << "Performing actions" << endl;
-  for (auto action : actions_list_) {
+  for (auto const &action : actions_list_) {
     action->process(image_);
     // when replaced with a unique_ptr this line can go:
-    delete action;
   }
   actions_list_.clear();
+  return true;
 }
 
 // process input file and populate actions vector
 void ImageProcessor::parse_file() {
   if (this->is_yaml()) {
     cout << "Parsing yaml file" << endl;
-    ParseYaml yaml(file_path_, actions_list_);
-    yaml.parse();
+    ParseYaml yaml(file_path_);
+    actions_list_ = yaml.parse();
   }
   return;
 }

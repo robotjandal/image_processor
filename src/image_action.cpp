@@ -1,16 +1,16 @@
 #include "image_action.hpp"
 
 #include <iostream>
+#include <memory>
 
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-using namespace std;
-
 namespace ImageProcessor {
 
-void initialise(cv::Mat &image, string input_file, string output_folder);
+// void initialise(cv::Mat &image, string input_file, string output_folder);
+void initialise(cv::Mat &image, std::map<std::string, std::string> arguments);
 void save(cv::Mat &image);
 void grey(cv::Mat &image);
 
@@ -23,7 +23,7 @@ void ImageAction::process(cv::Mat &image) {
 
   switch (action_) {
   case IMAGE_ACTIONS::E_INITIALISE:
-    initialise(image, input_file_, output_folder_);
+    initialise(image, arguments_);
     break;
   case IMAGE_ACTIONS::E_SAVE:
     save(image);
@@ -42,16 +42,22 @@ void ImageAction::process(cv::Mat &image) {
 ////
 
 // Create action object
-ImageAction *ActionFactory::generate_action() {
+std::unique_ptr<ImageAction> ActionFactory::generate_action() {
   find_action_type();
-  ImageAction *action_object = new ImageAction(action_);
-  return action_object;
+  std::unique_ptr<ImageAction> action_pointer{
+      new ImageAction(action_, string_action_)};
+  return action_pointer;
 }
-// Create action object passing in addtional strings
-ImageAction *ActionFactory::generate_action(string option1, string option2) {
+
+// Create action object passing in additional arguments
+// TODO: if the construction of the action fails it should return nullptr.
+std::unique_ptr<ImageAction>
+ActionFactory::generate_action(std::map<std::string, std::string> arguments) {
   find_action_type();
-  ImageAction *action_object = new ImageAction(action_, option1, option2);
-  return action_object;
+  std::unique_ptr<ImageAction> action_pointer(
+      new ImageAction(action_, arguments));
+  // ImageAction *action_object = new ImageAction(action_, arguments);
+  return action_pointer;
 }
 
 // Uses object input string to determine action type
@@ -76,9 +82,12 @@ void ActionFactory::find_action_type() {
 // Set up steps for input file and output folder
 // * input file is set
 // * output folder is set
-void initialise(cv::Mat &image, string file, string output_folder) {
+void initialise(cv::Mat &image, std::map<std::string, std::string> arguments) {
+  std::string file = arguments["image"];
+  std::string output_folder = arguments["output"];
   BOOST_LOG_TRIVIAL(debug) << "Initial setup before processing image actions";
-  BOOST_LOG_TRIVIAL(debug) << "File path: " << file << ". Output folder: " << output_folder;
+  BOOST_LOG_TRIVIAL(debug) << "File path: " << file
+                           << ". Output folder: " << output_folder;
 
   if (!boost::filesystem::exists(output_folder)) {
     boost::filesystem::remove_all(output_folder);
@@ -86,6 +95,7 @@ void initialise(cv::Mat &image, string file, string output_folder) {
   }
 
   image = cv::imread(file, cv::IMREAD_COLOR);
+  return;
 }
 
 // Save image to file

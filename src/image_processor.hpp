@@ -17,8 +17,8 @@ public:
   bool perform_actions();
 
 private:
-  std::vector<ImageAction *> actions_list_;
-  std::string file_path_;
+  std::vector<std::unique_ptr<ImageAction>> actions_list_;
+  const std::string file_path_;
   cv::Mat image_;
 
   bool is_yaml();
