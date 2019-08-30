@@ -17,6 +17,14 @@ void grey(cv::Mat &image);
 // Image Action
 ////
 
+// band-aid exists function, returns true when arguments exist
+bool ImageAction::exists() {
+  if (arguments_.size())
+    return true;
+  else
+    return false;
+};
+
 // Process action based on IMAGE_ACTIONS action
 void ImageAction::process(cv::Mat &image) {
   BOOST_LOG_TRIVIAL(debug) << "Processing Action: ";

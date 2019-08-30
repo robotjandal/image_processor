@@ -52,7 +52,7 @@ bool ImageProcessor::perform_actions() {
 void ImageProcessor::parse_file() {
   if (this->is_yaml()) {
     cout << "Parsing yaml file" << endl;
-    ParseYaml yaml(file_path_);
+    YamlParser yaml(file_path_);
     actions_list_ = yaml.parse();
   }
   return;

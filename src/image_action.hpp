@@ -24,6 +24,7 @@ public:
       : action_{action}, arguments_{arguments} {};
   void process(cv::Mat &image);
   std::string get_action() { return action_string_; };
+  bool exists();
 
 private:
   const IMAGE_ACTIONS action_;
