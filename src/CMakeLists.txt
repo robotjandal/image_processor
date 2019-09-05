@@ -1,14 +1,3 @@
-find_package(yaml-cpp REQUIRED)
-find_package( Boost 
-    REQUIRED
-    COMPONENTS
-        system
-        filesystem
-        log
-)
-find_package( OpenCV REQUIRED )
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-
 add_library(parse_yaml
     parse_yaml.hpp
     parse_yaml.cpp
