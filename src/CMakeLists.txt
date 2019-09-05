@@ -15,6 +15,7 @@ add_library(action
 
 add_executable(image_process
     main.cpp
+    exceptions.hpp
 )
 
 target_link_libraries(image_process 

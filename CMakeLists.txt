@@ -3,7 +3,7 @@ project(IMAGE_PROCESSOR
     DESCRIPTION "Yaml based tool for analysing and manipulating images"
     LANGUAGES CXX
 )
-
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 set(IMAGE_PROCESSOR_VERSION_MAJOR 0 CACHE STRING "major version" FORCE)
 set(IMAGE_PROCESSOR_VERSION_MINOR 1 CACHE STRING "minor version" FORCE)
 set(IMAGE_PROCESSOR_VERSION ${IMAGE_PROCESSOR_VERSION_MAJOR}.${IMAGE_PROCESSOR_VERSION_MINOR} CACHE STRING "version" FORCE)
@@ -27,14 +27,8 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_subdirectory(src)
 
-# allow to report to a cdash dashboard
+# enable cdash dashboard
 include(CTest)
-
-
-# build tests (targets: gtest_main, gtest)
-# add_subdirectory(vendor/google/googletest/googletest)
-
 # googletest
 enable_testing()
 add_subdirectory(test)
-# target_link_libraries("${PROJECT_NAME}-test" gtest)
