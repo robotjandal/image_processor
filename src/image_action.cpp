@@ -119,6 +119,39 @@ bool Parameter::get_bool() const {
     throw ImageProcessorError("Error: Casting to boolean");
 }
 
+// convert string to int
+int Parameter::get_int() const {
+  std::stringstream ss;
+  int output;
+  ss << value_;
+  ss >> output;
+  if (ss.fail())
+    throw ImageProcessorError("Error: Casting to int");
+  return output;
+}
+
+// convert string to float
+float Parameter::get_float() const {
+  std::stringstream ss;
+  float output;
+  ss << value_;
+  ss >> output;
+  if (ss.fail())
+    throw ImageProcessorError("Error: Casting to float");
+  return output;
+}
+
+// convert string to bool
+bool Parameter::get_bool() const {
+  std::string output = boost::algorithm::to_lower_copy(value_);
+  if (output == "true")
+    return true;
+  else if (output == "false")
+    return false;
+  else
+    throw ImageProcessorError("Error: Casting to boolean");
+}
+
 // Other Functions
 ////
 

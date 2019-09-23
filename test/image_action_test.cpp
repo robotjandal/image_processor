@@ -66,6 +66,7 @@ TEST(ParameterTestInt, intLargeValue) {
   ss << large_int;
   ss >> number_str;
   Parameter parameter{number_str};
+  // implicit conversion to long int
   ASSERT_THROW(parameter.get_int(), ImageProcessorError);
 }
 
