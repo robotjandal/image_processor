@@ -31,7 +31,25 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 # using include_directories is not best practice. In future a better method is needed here
 include_directories(${PROJECT_SOURCE_DIR}/src)
-add_executable(unit_tests parse_yaml_test.cpp)
-target_link_libraries(unit_tests gtest_main )
 
-add_test(NAME helloworld_test COMMAND unit_tests)
+include(GoogleTest)
+
+add_executable(unit_tests
+    main.cpp
+    parse_yaml_test.cpp 
+    image_action_test.cpp
+)
+
+target_link_libraries(unit_tests 
+    gtest_main
+    action
+    ${OpenCV_LIBS}
+    Boost::system
+    Boost::filesystem
+    Boost::log
+
+)
+
+# add_test(NAME unit_tests COMMAND unit_tests)
+gtest_discover_tests(unit_tests)
+# add_test(Name ParameterTest COMMAND unit_tests)

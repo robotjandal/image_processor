@@ -38,7 +38,11 @@ lib/
 bin/
 build/
 output/
+Testing/
 
+# Files
+
+*.log
 
 ## Local
 

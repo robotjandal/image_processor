@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9...3.10)
+cmake_minimum_required(VERSION 3.10)
 project(IMAGE_PROCESSOR 
     DESCRIPTION "Yaml based tool for analysing and manipulating images"
     LANGUAGES CXX
@@ -21,9 +21,9 @@ find_package( Boost
         filesystem
         log
 )
+include_directories( ${Boost_INCLUDE_DIRS})
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
-
 
 add_subdirectory(src)
 
