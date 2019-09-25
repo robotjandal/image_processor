@@ -47,17 +47,5 @@ private:
   void find_action_type();
 };
 
-class Parameter {
-public:
-  explicit Parameter(std::string value) : value_{value} {};
-  std::string get_string() const { return value_; };
-  int get_int() const;
-  float get_float() const;
-  bool get_bool() const;
-
-private:
-  const std::string value_;
-};
-
 } // namespace ImageProcessor
 #endif

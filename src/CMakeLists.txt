@@ -1,4 +1,6 @@
 add_library(parse_yaml
+    parse.hpp
+    parse.cpp
     parse_yaml.hpp
     parse_yaml.cpp
 )
@@ -29,7 +31,7 @@ target_link_libraries(image_process
         Boost::system
         Boost::filesystem
         Boost::log
- )
+)
 
 install(
     TARGETS image_process

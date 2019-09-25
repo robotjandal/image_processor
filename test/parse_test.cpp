@@ -1,14 +1,15 @@
 #include <algorithm>
+#include <stdexcept>
 #include <vector>
 
 #include "exceptions.hpp"
-#include "image_action.hpp"
+#include "parse.hpp"
 #include <gtest/gtest.h>
 
 namespace ImageProcessor {
 namespace {
 
-// parameter:;get_string()
+// parameter::get_string()
 TEST(ParameterTestString, Success) {
   std::string test = "test";
   Parameter parameter{test};
@@ -135,6 +136,46 @@ TEST(ParameterTestBool, boolInputFailure) {
   for (int i = 0; i < input_vector.size(); i++) {
     ASSERT_THROW(parameter_vector[i].get_bool(), ImageProcessorError);
   }
+}
+
+class ParseMapTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    p1_.add("key", "value");
+    p2_.add("test1", "-1");
+    p2_.add("test2", "2.2");
+  }
+
+  ParseMap p0_;
+  ParseMap p1_;
+  ParseMap p2_;
+};
+
+// testing adding to ParseMap
+TEST_F(ParseMapTest, addKeys) {
+  EXPECT_EQ(p0_.size(), 0);
+  EXPECT_EQ(p1_.size(), 1);
+  EXPECT_EQ(p2_.size(), 2);
+  p1_.add("float", "9.6");
+  EXPECT_EQ(p1_.size(), 2);
+}
+
+// testing getting values by key and casting Parameter as seen fit
+TEST_F(ParseMapTest, getValues) {
+  EXPECT_EQ(p1_["key"].get_string(), "value");
+  EXPECT_EQ(p2_["test1"].get_int(), int(-1));
+  EXPECT_EQ(p2_["test2"].get_float(), float(2.2));
+  ASSERT_THROW(p1_["key"].get_int(), ImageProcessorError);
+  ASSERT_THROW(p0_["not found"].get_string(), std::out_of_range);
+}
+
+// testing finding values and keys through search
+TEST_F(ParseMapTest, findKeysAndValues) {
+  auto output = p1_.find("key");
+  EXPECT_EQ(output.first, "key");
+  EXPECT_EQ(output.second.get_string(), "value");
+  ASSERT_THROW(p1_["key"].get_int(), ImageProcessorError);
+  ASSERT_THROW(p1_.find("not found"), std::out_of_range);
 }
 
 } // namespace

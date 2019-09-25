@@ -37,12 +37,12 @@ include(GoogleTest)
 add_executable(unit_tests
     main.cpp
     parse_yaml_test.cpp 
-    image_action_test.cpp
+    parse_test.cpp
 )
 
 target_link_libraries(unit_tests 
     gtest_main
-    action
+    parse_yaml
     ${OpenCV_LIBS}
     Boost::system
     Boost::filesystem

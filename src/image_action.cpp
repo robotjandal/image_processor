@@ -1,15 +1,8 @@
 #include "image_action.hpp"
 
-#include <iostream>
-#include <memory>
-#include <sstream>
-
-#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-
-#include "exceptions.hpp"
+#include <memory>
 
 namespace ImageProcessor {
 
@@ -85,39 +78,6 @@ void ActionFactory::find_action_type() {
   else {
     action_ = IMAGE_ACTIONS::E_NOACTION;
     BOOST_LOG_TRIVIAL(debug) << "Cannot process action: " << string_action_;
-
-// convert string to int
-int Parameter::get_int() const {
-  std::stringstream ss;
-  int output;
-  ss << value_;
-  ss >> output;
-  if (ss.fail())
-    throw ImageProcessorError("Error: Casting to int");
-  return output;
-}
-
-// convert string to float
-float Parameter::get_float() const {
-  std::stringstream ss;
-  float output;
-  ss << value_;
-  ss >> output;
-  if (ss.fail())
-    throw ImageProcessorError("Error: Casting to float");
-  return output;
-}
-
-// convert string to bool
-bool Parameter::get_bool() const {
-  std::string output = boost::algorithm::to_lower_copy(value_);
-  if (output == "true")
-    return true;
-  else if (output == "false")
-    return false;
-  else
-    throw ImageProcessorError("Error: Casting to boolean");
-}
 
 // convert string to int
 int Parameter::get_int() const {
