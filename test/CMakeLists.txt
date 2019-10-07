@@ -38,11 +38,14 @@ add_executable(unit_tests
     main.cpp
     parse_yaml_test.cpp 
     parse_test.cpp
+    action_test.cpp
 )
 
 target_link_libraries(unit_tests 
+  PRIVATE
     gtest_main
     parse_yaml
+    action_new
     ${OpenCV_LIBS}
     Boost::system
     Boost::filesystem
@@ -50,6 +53,7 @@ target_link_libraries(unit_tests
 
 )
 
+configure_file(data/test_image.png ${CMAKE_CURRENT_BINARY_DIR}/data/test_image.png COPYONLY)
 # add_test(NAME unit_tests COMMAND unit_tests)
 gtest_discover_tests(unit_tests)
 # add_test(Name ParameterTest COMMAND unit_tests)

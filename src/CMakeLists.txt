@@ -10,6 +10,11 @@ add_library(processor
     image_processor.cpp
 )
 
+add_library(action_new
+    action.hpp
+    action.cpp
+)
+
 add_library(action 
     image_action.hpp
     image_action.cpp
@@ -24,6 +29,7 @@ target_link_libraries(image_process
     PUBLIC    
         processor 
         action
+        action_new
         parse_yaml
     PRIVATE
         yaml-cpp
