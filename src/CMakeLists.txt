@@ -13,14 +13,14 @@ add_library(processor
     image_processor.cpp
 )
 
-add_library(action_new
+add_library(action
     action.hpp
     action.cpp
 )
 
-add_library(action 
-    image_action.hpp
-    image_action.cpp
+add_library(factory
+    action_factory.hpp
+    action_factory.cpp
 )
 
 add_executable(image_process
@@ -32,6 +32,7 @@ target_link_libraries(image_process
     PUBLIC    
         processor 
         parse_yaml
+        factory
         action
         parse
     PRIVATE

@@ -44,9 +44,10 @@ add_executable(unit_tests
 target_link_libraries(unit_tests 
   PRIVATE
     gtest_main
+    action
     parse
+    factory
     parse_yaml
-    action_new
     ${OpenCV_LIBS}
     Boost::system
     Boost::filesystem

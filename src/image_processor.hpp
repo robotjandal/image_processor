@@ -4,25 +4,25 @@
 #include <string>
 #include <vector>
 
-#include "image_action.hpp"
-#include "opencv4/opencv2/opencv.hpp"
+#include "action.hpp"
+#include <opencv4/opencv2/opencv.hpp>
 
 namespace ImageProcessor {
 
 class ImageProcessor {
 public:
-  ImageProcessor(std::string input_file) : file_path_{input_file} {};
-  bool initialise();
-  bool run();
-  bool perform_actions();
+  ImageProcessor(std::string const input_file) : file_path_{input_file} {};
+  void initialise() const;
+  void run() ;
 
 private:
-  std::vector<std::unique_ptr<ImageAction>> actions_list_;
+  std::vector<std::unique_ptr<Action>> actions_list_;
   const std::string file_path_;
-  cv::Mat image_;
+  Image image_;
 
-  bool is_yaml();
+  bool is_yaml() const;
   void parse_file();
+  void perform_actions();
 };
 
 } // namespace ImageProcessor

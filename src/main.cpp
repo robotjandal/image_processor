@@ -17,13 +17,11 @@ int main(int argc, const char *argv[]) {
     std::cout << USAGE;
     return -1;
   }
+  // TODO: add missing try/catch block
   std::string file_path = argv[1];
   ImageProcessor::ImageProcessor ip(file_path);
-  if (ip.initialise())
-    if (ip.run()) {
-      std::cout << "Run Successful" << std::endl;
-      return 0;
-    }
-  std::cout << "Run Failed" << std::endl;
-  return 1;
+  ip.initialise();
+  ip.run();
+  std::cout << "Run Successful" << std::endl;
+  return 0;
 }

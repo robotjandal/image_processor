@@ -1,7 +1,8 @@
 #ifndef CMAKE_PARSEYAML_H
 #define CMAKE_PARSEYAML_H
 
-#include "image_action.hpp"
+#include "action.hpp"
+#include "parse.hpp"
 #include <yaml-cpp/yaml.h>
 
 namespace ImageProcessor {
@@ -9,7 +10,7 @@ namespace ImageProcessor {
 class YamlParser {
 public:
   YamlParser(const std::string input_file) : file_path_{input_file} {};
-  std::vector<std::unique_ptr<ImageAction>> parse();
+  std::vector<std::unique_ptr<Action>> parse() const;
 
 private:
   const std::string file_path_;
@@ -17,17 +18,18 @@ private:
 
 class YamlNode {
 public:
+  YamlNode(){};
   YamlNode(const YAML::Node node) : node_{node} {};
-  std::string process();
-  std::map<std::string, std::string> get_arguments() {return arguments_;};
+  void process();
+  ParseMap get_parameters() const { return parameters_; };
 
-  bool has_found_actions()  { return this->found_action_; };
+  bool has_found_actions() const{ return this->found_action_; };
   // returns constant pointer to nested action Yaml::Node
-  const YAML::Node get_action_node() { return action_node_; };
+  YAML::Node get_action_node() const { return action_node_; };
 
 private:
-  const YAML::Node node_;
-  std::map<std::string, std::string> arguments_;
+  YAML::Node const node_;
+  ParseMap parameters_;
   // set to true when "actions" key found in Node
   static bool found_action_;
   YAML::Node action_node_;
