@@ -146,9 +146,9 @@ protected:
     p2_.add("test2", "2.2");
   }
 
-  ParseMap p0_;
-  ParseMap p1_;
-  ParseMap p2_;
+  ParseMap p0_{};
+  ParseMap p1_{};
+  ParseMap p2_{};
 };
 
 // testing adding to ParseMap

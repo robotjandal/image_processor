@@ -3,29 +3,44 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace ImageProcessor {
 
+// to specify case returned by get_keys()
+enum class KEYS_CASE : unsigned char {
+  E_LOWERCASE,
+  E_UPPERCASE,
+};
+
+// String wrapper with easy conversions to integer, floating point
+// or boolean values
 class Parameter {
 public:
-  explicit Parameter(std::string value) : value_{value} {};
+  Parameter(){};
+  explicit Parameter(std::string const value) : value_{value} {};
   std::string get_string() const { return value_; };
   int get_int() const;
   float get_float() const;
   bool get_bool() const;
 
 private:
-  const std::string value_;
+  std::string value_;
 };
 
-// map of strings wrapper
+// map of strings wrapper to hold content of action's from an external
+// source (e.g. YAML file). Key's default to lowercase
 class ParseMap {
 public:
-  // explicit ParseMap();
-  void add(std::string key, std::string value);
-  Parameter &operator[](std::string key);
-  int size() { arguments_.size(); };
-  std::pair<std::string, Parameter> find(std::string key);
+  ParseMap(){};
+  explicit ParseMap(std::map<std::string, Parameter> const arguments)
+      : arguments_{arguments} {};
+  Parameter operator[](std::string const key) const { return arguments_.at(key); };
+
+  int size() const { arguments_.size(); };
+  void add(std::string const key, std::string const value);
+  std::pair<std::string, Parameter> find(std::string const key) const;
+  std::vector<std::string> get_keys(KEYS_CASE const keys_case) const;
 
 private:
   std::map<std::string, Parameter> arguments_;

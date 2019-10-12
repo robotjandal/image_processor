@@ -44,6 +44,7 @@ add_executable(unit_tests
 target_link_libraries(unit_tests 
   PRIVATE
     gtest_main
+    parse
     parse_yaml
     action_new
     ${OpenCV_LIBS}

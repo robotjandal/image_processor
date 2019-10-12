@@ -1,6 +1,9 @@
-add_library(parse_yaml
+add_library(parse
     parse.hpp
     parse.cpp
+)
+
+add_library(parse_yaml
     parse_yaml.hpp
     parse_yaml.cpp
 )
@@ -28,9 +31,9 @@ add_executable(image_process
 target_link_libraries(image_process 
     PUBLIC    
         processor 
-        action
-        action_new
         parse_yaml
+        action
+        parse
     PRIVATE
         yaml-cpp
         ${OpenCV_LIBS}
