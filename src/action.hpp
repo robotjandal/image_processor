@@ -11,21 +11,17 @@ namespace ImageProcessor {
 
 struct Image {
   Image(){};
-  Image(const cv::Mat image, const std::string filename,
-        const std::string output_folder)
+  Image(cv::Mat const image, std::string const filename,
+        std::string const output_folder)
       : image_{image}, filename_{boost::filesystem::path{filename}},
         output_folder_{output_folder} {};
-  Image(const cv::Mat image, const boost::filesystem::path filename,
-        const std::string output_folder)
+  Image(cv::Mat const image, boost::filesystem::path const filename,
+        std::string const output_folder)
       : image_{image}, filename_{filename}, output_folder_{output_folder} {};
 
-  const std::string get_filename() const {
-    return filename_.filename().string();
-  };
-  const std::string get_stem() const { return filename_.stem().string(); };
-  const std::string get_extension() const {
-    return filename_.extension().string();
-  };
+  std::string get_filename() const { return filename_.filename().string(); };
+  std::string get_stem() const { return filename_.stem().string(); };
+  std::string get_extension() const { return filename_.extension().string(); };
 
   cv::Mat image_;
   boost::filesystem::path filename_;
@@ -42,7 +38,7 @@ public:
 // loading the image file
 class Initialise : public Action {
 public:
-  Initialise(const std::string input_file, const std::string output_folder)
+  Initialise(std::string const input_file, std::string const output_folder)
       : input_file_{input_file}, output_folder_{output_folder} {};
 
   Image process(Image);
@@ -52,18 +48,18 @@ private:
   std::string output_folder_{""};
 };
 
-// Save image to file based upon supplied filename otherwise 
-// a filename is automatically genereated 
+// Save image to file based upon supplied filename otherwise
+// a filename is automatically genereated
 class Save : public Action {
 public:
-  Save(const std::string filename) : filename_{filename} {};
+  Save(std::string const filename) : filename_{filename} {};
 
   Image process(Image);
   static void reset() { counter_ = 0; };
 
 private:
-  std::string get_save_filename(const boost::filesystem::path filename,
-                                const std::string output_folder);
+  std::string get_save_filename(boost::filesystem::path const filename,
+                                std::string const output_folder);
 
   std::string filename_{""};
   static int counter_;

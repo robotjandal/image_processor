@@ -36,25 +36,18 @@ Image Save::process(Image image) {
   // counter is incremented per save so that the filename is consistent
   // independent on whether the user enters a name or not
   counter_++;
-
-  if (filename_ != "") {
-    if (cv::imwrite(image.output_folder_ + "/" + filename_, image.image_))
-      return image;
-  } else {
-    if (cv::imwrite(
-            get_save_filename(image.get_filename(), image.output_folder_),
-            image.image_))
-      return image;
-  }
-  // If writing to file fails
+  if (filename_ == "")
+    filename_ = image.get_filename();
+  if (cv::imwrite(image.output_folder_ + "/" + filename_, image.image_))
+    return image;
   throw ImageProcessorError("Writing to file failed.");
 }
 
 // converts filename to string based on number of times the output was saved
 // Each subsequent save results in appending _X (where X is a number) to the
 // filename.
-std::string Save::get_save_filename(const boost::filesystem::path filename,
-                                    const std::string output_folder) {
+std::string Save::get_save_filename(boost::filesystem::path const filename,
+                                    std::string const output_folder) {
   if (counter_ == 1)
     return output_folder + "/" + filename.string();
   return output_folder + "/" + filename.stem().string() + "_" +

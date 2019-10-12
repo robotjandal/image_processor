@@ -12,7 +12,7 @@ namespace ImageProcessor {
 // Convert yaml file into a vector of actions
 std::vector<std::unique_ptr<Action>> YamlParser::parse() const {
   std::vector<std::unique_ptr<Action>> actions_list;
-  const YAML::Node config = YAML::LoadFile(file_path_);
+  YAML::Node const config = YAML::LoadFile(file_path_);
   // The set of outermost mappings in the yaml file are considered an action
   YamlNode initial_node{config};
   ActionFactory factory;
@@ -53,7 +53,7 @@ void YamlNode::process() {
     break;
   case YAML::NodeType::Map:
     for (YAML::const_iterator it = node_.begin(); it != node_.end(); it++) {
-      const std::string key = it->first.as<std::string>();
+      std::string const key = it->first.as<std::string>();
       // TODO: harden agaianst anything other than a string being used here.
       // exception catching?
       if (key == "actions" && !this->found_action_) {
@@ -65,7 +65,7 @@ void YamlNode::process() {
       else if (key == "actions" && this->found_action_) {
         throw ImageProcessorError("Error: Nesting action not allowed.");
       } else {
-        const std::string value = it->second.as<std::string>();
+        std::string const value = it->second.as<std::string>();
         BOOST_LOG_TRIVIAL(debug) << "Map. key: " << key << ", value: " << value;
         parameters_.add(key, value);
       }

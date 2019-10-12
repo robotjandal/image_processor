@@ -8,5 +8,8 @@ TEST(hello_world_test, NoArguments) {
   EXPECT_EQ("Hello, World!", "Hello, World!");
 }
 
+//TODO YamlNode testing
+
+
 } // namespace
 } // namespace ImageProcessor

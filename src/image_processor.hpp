@@ -13,7 +13,7 @@ class ImageProcessor {
 public:
   ImageProcessor(std::string const input_file) : file_path_{input_file} {};
   void initialise() const;
-  void run() ;
+  void run();
 
 private:
   std::vector<std::unique_ptr<Action>> actions_list_;

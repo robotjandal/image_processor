@@ -8,7 +8,8 @@
 namespace ImageProcessor {
 
 // Creates action based on supplied parameters
-std::unique_ptr<Action> ActionFactory::create_action(ParseMap const parameters) {
+std::unique_ptr<Action>
+ActionFactory::create_action(ParseMap const parameters) {
   std::string action = find_action(parameters);
   if (action == "save")
     return std::unique_ptr<Action>{new Save{parameters["save"].get_string()}};

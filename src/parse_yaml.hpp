@@ -9,21 +9,21 @@ namespace ImageProcessor {
 
 class YamlParser {
 public:
-  YamlParser(const std::string input_file) : file_path_{input_file} {};
+  YamlParser(std::string const input_file) : file_path_{input_file} {};
   std::vector<std::unique_ptr<Action>> parse() const;
 
 private:
-  const std::string file_path_;
+  std::string const file_path_;
 };
 
 class YamlNode {
 public:
   YamlNode(){};
-  YamlNode(const YAML::Node node) : node_{node} {};
+  YamlNode(YAML::Node const node) : node_{node} {};
   void process();
   ParseMap get_parameters() const { return parameters_; };
 
-  bool has_found_actions() const{ return this->found_action_; };
+  bool has_found_actions() const { return this->found_action_; };
   // returns constant pointer to nested action Yaml::Node
   YAML::Node get_action_node() const { return action_node_; };
 

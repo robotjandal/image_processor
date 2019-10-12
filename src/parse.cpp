@@ -44,13 +44,13 @@ bool Parameter::get_bool() const {
 ////
 
 // adding key value pair where the key defaults to lowercase
-void ParseMap::add(const std::string key, const std::string value) {
+void ParseMap::add(std::string const key, std::string const value) {
   arguments_.insert(std::pair<std::string, Parameter>(boost::to_lower_copy(key),
                                                       Parameter{value}));
 }
 
 // Find returns both the key and value as a pair
-std::pair<std::string, Parameter> ParseMap::find(const std::string key) const {
+std::pair<std::string, Parameter> ParseMap::find(std::string const key) const {
   auto output = arguments_.find(key);
   if (output != arguments_.end())
     return std::pair<std::string, Parameter>(output->first, output->second);
@@ -61,7 +61,7 @@ std::pair<std::string, Parameter> ParseMap::find(const std::string key) const {
 // Gathers keys in a vector with the option of converting these keys to
 // lowercase, uppercase or as written in the yaml file
 std::vector<std::string>
-ParseMap::get_keys(const KEYS_CASE keys_case = KEYS_CASE::E_LOWERCASE) const {
+ParseMap::get_keys(KEYS_CASE const keys_case = KEYS_CASE::E_LOWERCASE) const {
   std::vector<std::string> key_vec;
   for (auto &pair : arguments_) {
     if (keys_case == KEYS_CASE::E_UPPERCASE)

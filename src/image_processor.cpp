@@ -49,7 +49,7 @@ void ImageProcessor::parse_file() {
 }
 
 // tests file_path_ extension is .yaml
-bool ImageProcessor::is_yaml() const{
+bool ImageProcessor::is_yaml() const {
   namespace fs = boost::filesystem;
   fs::path file(file_path_);
   string extension = file.extension().string();
