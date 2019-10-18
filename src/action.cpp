@@ -33,25 +33,36 @@ int Save::counter_ = 0;
 
 Image Save::process(Image image) {
   BOOST_LOG_TRIVIAL(debug) << "Saving image";
-  // counter is incremented per save so that the filename is consistent
-  // independent on whether the user enters a name or not
-  counter_++;
-  if (filename_ == "")
-    filename_ = image.get_filename();
-  if (cv::imwrite(image.output_folder_ + "/" + filename_, image.image_))
+  populate_filename(image.filename_);
+  build_path(image.output_folder_);
+  if (cv::imwrite(path_.string(), image.image_))
     return image;
   throw ImageProcessorError("Writing to file failed.");
 }
 
-// converts filename to string based on number of times the output was saved
+// if filename was not set by user it is created based on the image filename
+// and an increment defined by the save number. First save has no suffix.
 // Each subsequent save results in appending _X (where X is a number) to the
 // filename.
-std::string Save::get_save_filename(boost::filesystem::path const filename,
-                                    std::string const output_folder) {
-  if (counter_ == 1)
-    return output_folder + "/" + filename.string();
-  return output_folder + "/" + filename.stem().string() + "_" +
-         std::to_string(counter_) + filename.extension().string();
+void Save::populate_filename(boost::filesystem::path const image_filename) {
+  // counter is incremented per save so that the filename is consistent
+  // independent on whether the user enters a name or not
+  counter_++;
+  if (!filename_.empty())
+    return;
+  if (counter_ == 1) {
+    filename_ = image_filename;
+  } else {
+    std::string file = image_filename.stem().string() + "_" + std::to_string(counter_);
+    boost::filesystem::path output_file{file};
+    output_file.replace_extension(image_filename.extension());
+    filename_ = output_file;
+  }
+}
+
+std::string Save::build_path(std::string const folder) {
+  boost::filesystem::path output{folder};
+  path_ /=output / filename_;
 }
 
 Image Grey::process(Image image) {
@@ -59,5 +70,4 @@ Image Grey::process(Image image) {
   cv::cvtColor(image.image_, image.image_, cv::COLOR_BGR2GRAY);
   return image;
 }
-
 } // namespace ImageProcessor

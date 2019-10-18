@@ -58,10 +58,11 @@ public:
   static void reset() { counter_ = 0; };
 
 private:
-  std::string get_save_filename(boost::filesystem::path const filename,
-                                std::string const output_folder);
+  void populate_filename(boost::filesystem::path const filename);
+  std::string build_path(std::string const folder);
 
-  std::string filename_{""};
+  boost::filesystem::path filename_{};
+  boost::filesystem::path path_{};
   static int counter_;
 };
 
