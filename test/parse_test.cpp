@@ -178,5 +178,13 @@ TEST_F(ParseMapTest, findKeysAndValues) {
   ASSERT_THROW(p1_.find("not found"), std::out_of_range);
 }
 
+// test removing a non-existent key, then removing one of the valid keys
+TEST_F(ParseMapTest, removeKeys) { 
+  p2_.remove("three");
+  EXPECT_EQ(p2_.size(), int(2));
+  p2_.remove("test1");
+  EXPECT_EQ(p2_.size(), int(1));
+}
+
 } // namespace
 } // namespace ImageProcessor
