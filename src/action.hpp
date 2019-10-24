@@ -38,14 +38,16 @@ public:
 // loading the image file
 class Initialise : public Action {
 public:
-  Initialise(std::string const input_file, std::string const output_folder)
-      : input_file_{input_file}, output_folder_{output_folder} {};
+  Initialise(std::string const input_file) : Initialise(input_file, "output"){};
+  Initialise(std::string const input_file, std::string const output_folder);
 
   Image process(Image);
+  std::string get_input_file() const { return input_file_; };
+  std::string get_output_folder() const { return output_folder_; };
 
 private:
-  std::string input_file_{""};
-  std::string output_folder_{""};
+  std::string input_file_;
+  std::string output_folder_;
 };
 
 // Save image to file based upon supplied filename otherwise

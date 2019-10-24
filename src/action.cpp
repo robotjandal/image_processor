@@ -9,12 +9,16 @@
 
 namespace ImageProcessor {
 
-Image Initialise::process(Image image) {
+Initialise::Initialise(std::string const input_file,
+                       std::string const output_folder)
+    : input_file_{input_file}, output_folder_{output_folder} {
   if (input_file_ == "")
     throw ImageProcessorError("Input file not specified.");
   if (output_folder_ == "")
     throw ImageProcessorError("Output folder not specified.");
+}
 
+Image Initialise::process(Image image) {
   BOOST_LOG_TRIVIAL(debug) << "Initial setup before processing image actions";
   BOOST_LOG_TRIVIAL(debug) << "File path: " << input_file_
                            << ". Output folder: " << output_folder_;

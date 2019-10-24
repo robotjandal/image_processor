@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "action.hpp"
+#include "exceptions.hpp"
 
 namespace ImageProcessor {
 namespace {
@@ -26,6 +27,29 @@ protected:
 TEST_F(ImageTest, loadFile) {
   EXPECT_EQ(im1.image_.rows, 10);
   EXPECT_EQ(im1.image_.cols, 10);
+}
+
+class InitialiseTest : public ::testing::Test {
+protected:
+  void SetUp() override { input_file_ = "./data/test_image.png"; }
+  boost::filesystem::path input_file_;
+};
+
+// test constructing the initial object using different parameters
+TEST_F(InitialiseTest, InitialConstruction) {
+  // test empty parameter use cases
+  EXPECT_THROW(Initialise(""), ImageProcessorError);
+  EXPECT_THROW(Initialise("", ""), ImageProcessorError);
+  EXPECT_THROW(Initialise("test", ""), ImageProcessorError);
+  EXPECT_THROW(Initialise("", "other"), ImageProcessorError);
+  // one parameter initialisation
+  Initialise one{input_file_.string()};
+  EXPECT_EQ(one.get_input_file(), input_file_.string());
+  EXPECT_EQ(one.get_output_folder(), "output");
+  // two parameter initialisation
+  Initialise two{input_file_.string(), "different"};
+  EXPECT_EQ(two.get_input_file(), input_file_.string());
+  EXPECT_EQ(two.get_output_folder(), "different");
 }
 
 // // Making multiple copies of the image and testing file path return

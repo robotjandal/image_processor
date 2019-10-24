@@ -20,7 +20,7 @@ int main(int argc, const char *argv[]) {
   // TODO: add missing try/catch block
   std::string file_path = argv[1];
   ImageProcessor::ImageProcessor ip(file_path);
-  ip.initialise();
+  ip.init();
   ip.run();
   std::cout << "Run Successful" << std::endl;
   return 0;

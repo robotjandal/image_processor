@@ -12,7 +12,7 @@ namespace ImageProcessor {
 class ImageProcessor {
 public:
   ImageProcessor(std::string const input_file) : file_path_{input_file} {};
-  void initialise() const;
+  void init() const;
   void run();
 
 private:

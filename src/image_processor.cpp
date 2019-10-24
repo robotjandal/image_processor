@@ -17,7 +17,7 @@ namespace ImageProcessor {
 ////
 
 // Set up logging
-void ImageProcessor::initialise() const {
+void ImageProcessor::init() const {
   namespace logging = boost::log;
 
   logging::add_file_log("output/processor.log");
