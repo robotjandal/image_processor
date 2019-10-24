@@ -54,13 +54,16 @@ private:
 // a filename is automatically genereated
 class Save : public Action {
 public:
+  Save(){};
   Save(std::string const filename) : filename_{filename} {};
 
   Image process(Image);
   static void reset() { counter_ = 0; };
+  std::string get_filepath() { return path_.string(); };
 
 private:
-  void populate_filename(boost::filesystem::path const filename);
+  void process_filename(boost::filesystem::path const image_filename);
+  void populate_filename(boost::filesystem::path const image_filename);
   std::string build_path(std::string const folder);
 
   boost::filesystem::path filename_{};
