@@ -9,27 +9,35 @@
 
 namespace ImageProcessor {
 
-Initialise::Initialise(std::string const input_file,
+Initialise::Initialise(IFilesystem *fs, std::string const input_file,
                        std::string const output_folder)
-    : input_file_{input_file}, output_folder_{output_folder} {
+    : fs_{fs}, input_file_{input_file}, output_folder_{output_folder} {
   if (input_file_ == "")
     throw ImageProcessorError("Input file not specified.");
   if (output_folder_ == "")
     throw ImageProcessorError("Output folder not specified.");
+  if (fs_ == nullptr)
+    throw ImageProcessorError("fs not a valid pointer");
 }
 
 Image Initialise::process(Image image) {
   BOOST_LOG_TRIVIAL(debug) << "Initial setup before processing image actions";
   BOOST_LOG_TRIVIAL(debug) << "File path: " << input_file_
                            << ". Output folder: " << output_folder_;
-  if (boost::filesystem::exists(output_folder_)) {
-    boost::filesystem::remove_all(output_folder_);
+  if (fs_->path_exists(output_folder_)) {
+    fs_->remove_folder(output_folder_);
   }
-  boost::filesystem::create_directories(output_folder_);
-  image = Image{cv::imread(input_file_, cv::IMREAD_COLOR),
+  fs_->create_folders(output_folder_);
+  image = Image{fs_->read_image(input_file_, false),
                 boost::filesystem::path(input_file_).filename().string(),
                 output_folder_};
   return image;
+}
+
+Save::Save(IFilesystem *fs, std::string const filename)
+    : fs_{std::move(fs)}, filename_{filename} {
+  if (fs_ == nullptr)
+    throw ImageProcessorError("fs not a valid pointer");
 }
 
 int Save::counter_ = 0;
@@ -45,7 +53,7 @@ Image Save::process(Image image) {
   counter_++;
   process_filename(image.filename_);
   build_path(image.output_folder_);
-  if (cv::imwrite(path_.string(), image.image_))
+  if (fs_->write_image(path_, image.image_))
     return image;
   throw ImageProcessorError("Writing to file failed.");
 }

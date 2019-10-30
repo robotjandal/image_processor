@@ -13,6 +13,11 @@ add_library(processor
     image_processor.cpp
 )
 
+add_library(interface
+    ifilesystem.hpp
+    ifilesystem.cpp
+)
+
 add_library(action
     action.hpp
     action.cpp
@@ -33,6 +38,7 @@ target_link_libraries(image_process
         processor 
         parse_yaml
         factory
+        interface
         action
         parse
     PRIVATE

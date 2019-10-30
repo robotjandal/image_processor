@@ -35,7 +35,6 @@ void ImageProcessor::run() {
 // process action from list
 void ImageProcessor::perform_actions() {
   cout << "Performing actions" << endl;
-  actions_list_[0]->process(image_);
   Save::reset();
   for (auto const &action : actions_list_) {
     image_ = action->process(image_);

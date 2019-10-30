@@ -1,12 +1,17 @@
-#include <iostream>
 #include <boost/filesystem.hpp>
-#include <gtest/gtest.h>
+#include <iostream>
 
 #include "action.hpp"
 #include "exceptions.hpp"
+#include "ifilsystem_mock.hpp"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 namespace ImageProcessor {
-namespace {
+
+using ::testing::_; // Matcher for parameters
+using testing::AtLeast;
+using ::testing::Return;
 
 class ImageTest : public ::testing::Test {
 protected:
@@ -16,7 +21,8 @@ protected:
     // remove when ./bin/unit_tests works
     std::cout << "current folder: " << boost::filesystem::current_path()
               << std::endl;
-    im1 = Image{cv::imread(input_file.string()), input_file.filename().string(), "test"};
+    im1 = Image{cv::imread(input_file.string()), input_file.filename().string(),
+                "test"};
   }
 
   Image im1{};
@@ -31,27 +37,51 @@ TEST_F(ImageTest, loadFile) {
 
 class InitialiseTest : public ::testing::Test {
 protected:
-  void SetUp() override { input_file_ = "./data/test_image.png"; }
-  boost::filesystem::path input_file_;
+  void SetUp() override {
+    image_ = Image{cv::imread(input_file_.string(), cv::IMREAD_COLOR),
+                   boost::filesystem::path(input_file_).filename().string(),
+                   "test_output"};
+  }
+  boost::filesystem::path input_file_{"./data/test_image.png"};
+  Image image_;
 };
 
 // test constructing the initial object using different parameters
-TEST_F(InitialiseTest, InitialConstruction) {
+TEST_F(InitialiseTest, InitialiseConstruction) {
   // test empty parameter use cases
-  EXPECT_THROW(Initialise(""), ImageProcessorError);
-  EXPECT_THROW(Initialise("", ""), ImageProcessorError);
-  EXPECT_THROW(Initialise("test", ""), ImageProcessorError);
-  EXPECT_THROW(Initialise("", "other"), ImageProcessorError);
+  EXPECT_THROW(Initialise(make_filesystem(), ""), ImageProcessorError);
+  EXPECT_THROW(Initialise(make_filesystem(), "", ""), ImageProcessorError);
+  EXPECT_THROW(Initialise(make_filesystem(), "test", ""), ImageProcessorError);
+  EXPECT_THROW(Initialise(make_filesystem(), "", "other"), ImageProcessorError);
   // one parameter initialisation
-  Initialise one{input_file_.string()};
+  Initialise one{make_filesystem(), input_file_.string()};
   EXPECT_EQ(one.get_input_file(), input_file_.string());
   EXPECT_EQ(one.get_output_folder(), "output");
   // two parameter initialisation
-  Initialise two{input_file_.string(), "different"};
+  Initialise two{make_filesystem(), input_file_.string(), "different"};
   EXPECT_EQ(two.get_input_file(), input_file_.string());
   EXPECT_EQ(two.get_output_folder(), "different");
 }
 
+// test processing can
+// raw pointers for mockFilesystem is used because unique_ptr was too difficult
+TEST_F(InitialiseTest, InitialiseProcess) {
+  mockFilesystem *fs_ptr = new mockFilesystem;
+  Initialise test(fs_ptr, input_file_.string());
+  EXPECT_CALL(*fs_ptr, path_exists(boost::filesystem::path{"output"}))
+      .WillOnce(Return(true));
+  EXPECT_CALL(*fs_ptr, remove_folder(boost::filesystem::path{"output"}))
+      .Times(1);
+  EXPECT_CALL(*fs_ptr, create_folders(boost::filesystem::path{"output"}))
+      .Times(1);
+  EXPECT_CALL(*fs_ptr, read_image(input_file_, false))
+      .WillOnce(Return(image_.image_));
+
+  Image output = test.process(image_);
+  ASSERT_EQ(output.image_.size(), image_.image_.size());
+}
+
+}
 // // Making multiple copies of the image and testing file path return
 // TEST_F(ImageTest, multiCopyReturnFilepath) {
 //   Image im2 = im1.copy();
@@ -77,5 +107,4 @@ TEST_F(InitialiseTest, InitialConstruction) {
 //   EXPECT_EQ(im8.get_filename(), "test_image_4.png");
 // }
 
-} // namespace
 } // namespace ImageProcessor
