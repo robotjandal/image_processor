@@ -20,6 +20,8 @@ struct Image {
         std::string const output_folder)
       : image_{image}, filename_{filename}, output_folder_{output_folder} {};
 
+  bool operator==(const Image &other) const;
+
   std::string get_filename() const { return filename_.filename().string(); };
   std::string get_stem() const { return filename_.stem().string(); };
   std::string get_extension() const { return filename_.extension().string(); };
