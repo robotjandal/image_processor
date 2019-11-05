@@ -2,8 +2,9 @@
 #include <iostream>
 
 #include "action.hpp"
-#include "exceptions.hpp"
 #include "ifilsystem_mock.hpp"
+#include "exceptions.hpp"
+#include "image.hpp"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -97,8 +98,8 @@ TEST(GreyTest, GreyProcess) {
   ASSERT_EQ(im_test, im_cv);
 }
 
-}
 // // Making multiple copies of the image and testing file path return
+//}
 // TEST_F(ImageTest, multiCopyReturnFilepath) {
 //   Image im2 = im1.copy();
 //   Image im3 = im2.copy();

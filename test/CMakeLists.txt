@@ -49,6 +49,7 @@ target_link_libraries(unit_tests
     interface
     action
     parse
+    image
     factory
     parse_yaml
     ${OpenCV_LIBS}

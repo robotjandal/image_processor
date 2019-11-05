@@ -3,6 +3,11 @@ add_library(parse
     parse.cpp
 )
 
+add_library(image
+    image.hpp
+    image.cpp
+)
+
 add_library(parse_yaml
     parse_yaml.hpp
     parse_yaml.cpp
@@ -41,6 +46,7 @@ target_link_libraries(image_process
         interface
         action
         parse
+        image
     PRIVATE
         yaml-cpp
         ${OpenCV_LIBS}
