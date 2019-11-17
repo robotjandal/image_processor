@@ -52,10 +52,12 @@ protected:
 // test constructing the initial object using different parameters
 TEST_F(InitialiseTest, InitialiseConstruction) {
   // test empty parameter use cases
-  EXPECT_THROW(Initialise(make_filesystem(), ""), ImageProcessorError);
-  EXPECT_THROW(Initialise(make_filesystem(), "", ""), ImageProcessorError);
-  EXPECT_THROW(Initialise(make_filesystem(), "test", ""), ImageProcessorError);
-  EXPECT_THROW(Initialise(make_filesystem(), "", "other"), ImageProcessorError);
+  IFilesystem *mock = make_filesystem();
+  EXPECT_THROW(Initialise(mock, ""), ImageProcessorError);
+  EXPECT_THROW(Initialise(mock, "", ""), ImageProcessorError);
+  EXPECT_THROW(Initialise(mock, "test", ""), ImageProcessorError);
+  EXPECT_THROW(Initialise(mock, "", "other"), ImageProcessorError);
+  delete mock;
   // one parameter initialisation
   Initialise one{make_filesystem(), TESTIMAGE.string()};
   EXPECT_EQ(one.get_input_file(), TESTIMAGE.string());
