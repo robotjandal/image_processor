@@ -1,10 +1,14 @@
-#include "ifilesystem.hpp"
+#include "di_interfaces.hpp"
 #include "exceptions.hpp"
 
 namespace ImageProcessor {
 
 // create filesystem raw pointer.
 IFilesystem *make_filesystem() { return new Filesystem; }
+
+// create opencv functions wrapper raw pointer
+IOpenCV *make_opencv() { return new OpenCV; }
+
 
 // wrapper for boost filesystem path exists
 bool Filesystem::path_exists(boost::filesystem::path const folder) const {
@@ -34,10 +38,19 @@ cv::Mat Filesystem::read_image(boost::filesystem::path const path,
 
 // wrapper for OpenCV  imwrite
 bool Filesystem::write_image(boost::filesystem::path const path,
-                             cv::Mat const image) {
-  if (cv::imwrite(path.string(), image))
+                             Image const image) {
+  if (cv::imwrite(path.string(), image.image_))
     return true;
   return false;
+}
+
+Image OpenCV::grey(Image const &image) {
+  // temporary way to create a copy of the Image object
+  Image output;
+  output.filename_ = image.filename_;
+  output.output_folder_ = image.output_folder_;
+  cv::cvtColor(image.image_, output.image_, cv::COLOR_BGR2GRAY);
+  return output;
 }
 
 } // namespace ImageProcessor

@@ -2,7 +2,8 @@
 #include <iostream>
 
 #include "action.hpp"
-#include "ifilsystem_mock.hpp"
+#include "di_interfaces.hpp"
+#include "di_interfaces_mock.hpp"
 #include "exceptions.hpp"
 #include "image.hpp"
 #include "gmock/gmock.h"
@@ -43,7 +44,7 @@ class InitialiseTest : public ::testing::Test {
 protected:
   void SetUp() override {
     im1_ = Image{cv::imread(TESTIMAGE.string(), cv::IMREAD_COLOR),
-                 TESTIMAGE.filename().string(), "test_output"};
+                 TESTIMAGE.filename().string(), "output"};
   }
   Image im1_;
 };
@@ -80,22 +81,30 @@ TEST_F(InitialiseTest, InitialiseProcess) {
       .WillOnce(Return(im1_.image_));
 
   Image output = test.process(im1_);
-  ASSERT_EQ(output.image_.size(), im1_.image_.size());
+  ASSERT_EQ(output, im1_);
 }
 
 // reads in original colour image which is then transformed.
 // compared with grey image already in grey.
 // could not get a single channel read in through imread
-TEST(GreyTest, GreyProcess) {
-  Image im_test{cv::imread(TESTIMAGE.string()), TESTIMAGE.filename().string(),
-                "test"};
+class GreyTest : public ::testing::Test {
+protected:
+  void SetUp() override {
+    im1_ = Image{cv::imread(TESTIMAGE.string()), TESTIMAGE.filename().string(),
+                 "output"};
+  }
+  Image im1_;
+};
 
-  Image im_cv{cv::imread(TESTIMAGE.string()), TESTIMAGE.filename().string(),
-              "test"};
-  Grey test;
-  im_test = test.process(im_test);
-  cv::cvtColor(im_cv.image_, im_cv.image_, cv::COLOR_BGR2GRAY);
-  ASSERT_EQ(im_test, im_cv);
+TEST_F(GreyTest, process) {
+  cv::Mat temp;
+  cv::cvtColor(im1_.image_, temp, cv::COLOR_BGR2GRAY);
+  mockOpenCV *cv_ptr = new mockOpenCV;
+  Grey action(cv_ptr);
+  Image grey_im = Image(temp, im1_.filename_.string(), im1_.output_folder_);
+  EXPECT_CALL(*cv_ptr, grey(grey_im)).WillOnce(Return(grey_im));
+  Image processed = action.process(grey_im);
+  ASSERT_EQ(processed, grey_im);
 }
 
 // // Making multiple copies of the image and testing file path return

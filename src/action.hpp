@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "ifilesystem.hpp"
+#include "di_interfaces.hpp"
 #include "parse.hpp"
 #include "image.hpp"
 #include <boost/filesystem.hpp>
@@ -65,7 +65,12 @@ private:
 // converts image to greyscale
 class Grey : public Action {
 public:
-  Image process(Image);
+  Grey(IOpenCV *opencv);
+  Image process(Image image);
+  ~Grey() { delete cv_; };
+
+  private:
+  IOpenCV *cv_;
 };
 
 } // namespace ImageProcessor

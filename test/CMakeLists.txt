@@ -39,14 +39,14 @@ add_executable(unit_tests
     parse_yaml_test.cpp 
     parse_test.cpp
     action_test.cpp
-    ifilsystem_mock.hpp
+    di_interfaces_mock.hpp
 )
 
 target_link_libraries(unit_tests 
   PRIVATE
     gtest_main
     gmock
-    interface
+    interfaces
     action
     parse
     image

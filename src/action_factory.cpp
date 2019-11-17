@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "exceptions.hpp"
-#include "ifilesystem.hpp"
+#include "di_interfaces.hpp"
 #include <boost/algorithm/string.hpp>
 
 namespace ImageProcessor {
@@ -19,7 +19,7 @@ ActionFactory::create_action(ParseMap const parameters) {
         new Save{make_filesystem(), parameters["save"].get_string()}};
 
   } else if (action == "grey")
-    return std::unique_ptr<Action>{new Grey};
+    return std::unique_ptr<Action>{new Grey{make_opencv()}};
   else
     // a double check to ensure action was found. Nothing should reach here
     throw ImageProcessorError("No action found");
@@ -30,11 +30,11 @@ ActionFactory::create_initial_action(ParseMap const parameters) {
   if (parameters["output"].get_string() == "")
     // pass in only image
     return std::unique_ptr<Action>{
-        new Initialise{make_filesystem(), parameters["image"].get_string()}};
+        new Initialise(make_filesystem(), parameters["image"].get_string())};
   // pass in image and output folder string
   return std::unique_ptr<Action>{
-      new Initialise{make_filesystem(), parameters["image"].get_string(),
-                     parameters["output"].get_string()}};
+      new Initialise(make_filesystem(), parameters["image"].get_string(),
+                     parameters["output"].get_string())};
 }
 
 // // iterates through key's to find one of the allowed action strings.

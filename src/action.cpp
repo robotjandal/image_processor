@@ -53,7 +53,7 @@ Image Save::process(Image image) {
   counter_++;
   process_filename(image.filename_);
   build_path(image.output_folder_);
-  if (fs_->write_image(path_, image.image_))
+  if (fs_->write_image(path_, image))
     return image;
   throw ImageProcessorError("Writing to file failed.");
 }
@@ -90,9 +90,14 @@ std::string Save::build_path(std::string const folder) {
   path_ /= output / filename_;
 }
 
+Grey::Grey(IOpenCV *i_opencv) : cv_{i_opencv} {
+  if (cv_ == nullptr)
+    throw ImageProcessorError("fs not a valid pointer");
+}
+
 Image Grey::process(Image image) {
   BOOST_LOG_TRIVIAL(debug) << "Converting to greyscale";
-  cv::cvtColor(image.image_, image.image_, cv::COLOR_BGR2GRAY);
-  return image;
+  Image output = cv_->grey(image);
+  return output;
 }
 } // namespace ImageProcessor
