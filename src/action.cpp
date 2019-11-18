@@ -11,7 +11,7 @@ namespace ImageProcessor {
 
 Initialise::Initialise(IFilesystem *fs, std::string const input_file,
                        std::string const output_folder)
-    : fs_{fs}, input_file_{input_file}, output_folder_{output_folder} {
+    : fs_{std::move(fs)}, input_file_{input_file}, output_folder_{output_folder} {
   if (input_file_ == "")
     throw ImageProcessorError("Input file not specified.");
   if (output_folder_ == "")
@@ -52,7 +52,7 @@ Image Save::process(Image image) {
   // independent on whether the user enters a name or not
   counter_++;
   process_filename(image.filename_);
-  build_path(image.output_folder_);
+  prefix_folder(image.output_folder_);
   if (fs_->write_image(path_, image))
     return image;
   throw ImageProcessorError("Writing to file failed.");
@@ -63,9 +63,11 @@ Image Save::process(Image image) {
 // extension is applied if missing from in the incoming image.
 void Save::process_filename(boost::filesystem::path const image_filename) {
   if (filename_.empty())
-    populate_filename(image_filename);
-  if (!filename_.has_extension())
-    filename_.replace_extension(image_filename.extension());
+    build_custom_filename(image_filename);
+  else
+    path_ = filename_;
+  if (!path_.has_extension())
+    path_.replace_extension(image_filename.extension());
 }
 
 // if filename was not set by user it is created based on the image filename
@@ -73,24 +75,24 @@ void Save::process_filename(boost::filesystem::path const image_filename) {
 // the save number. First save has no suffix.
 // Each subsequent save results in appending _X (where X is a number) to the
 // filename.
-void Save::populate_filename(boost::filesystem::path const image_filename) {
+void Save::build_custom_filename(boost::filesystem::path const image_filename) {
   if (counter_ == 1) {
-    filename_ = image_filename;
+    path_ = image_filename;
   } else {
     std::string file_string =
         image_filename.stem().string() + "_" + std::to_string(counter_);
-    filename_ = boost::filesystem::path{file_string};
+    path_ = boost::filesystem::path{file_string};
   }
 }
 
 // Output path based on folder and filename.
 // Base path folder is the project working directory
-std::string Save::build_path(std::string const folder) {
+std::string Save::prefix_folder(std::string const folder) {
   boost::filesystem::path output{folder};
-  path_ /= output / filename_;
+  path_ = output / path_;
 }
 
-Grey::Grey(IOpenCV *i_opencv) : cv_{i_opencv} {
+Grey::Grey(IOpenCV *i_opencv) : cv_{std::move(i_opencv)} {
   if (cv_ == nullptr)
     throw ImageProcessorError("fs not a valid pointer");
 }

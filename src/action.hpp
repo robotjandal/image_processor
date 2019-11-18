@@ -43,22 +43,22 @@ private:
 // a filename is automatically genereated
 class Save : public Action {
 public:
-  Save(IFilesystem *fs) : Save(std::move(fs), ""){};
+  Save(IFilesystem *fs) : Save(fs, ""){};
   Save(IFilesystem *fs, std::string const filename);
   ~Save() { delete fs_; };
 
-  Image process(Image);
+  Image process(Image image);
   static void reset() { counter_ = 0; };
   std::string get_filepath() { return path_.string(); };
 
 private:
   void process_filename(boost::filesystem::path const image_filename);
-  void populate_filename(boost::filesystem::path const image_filename);
-  std::string build_path(std::string const folder);
+  void build_custom_filename(boost::filesystem::path const image_filename);
+  std::string prefix_folder(std::string const folder);
 
   IFilesystem *fs_;
-  boost::filesystem::path filename_{};
-  boost::filesystem::path path_{};
+  boost::filesystem::path filename_{}; // set by constructor
+  boost::filesystem::path path_{}; // set by process()
   static int counter_;
 };
 
