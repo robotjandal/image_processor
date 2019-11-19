@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "exceptions.hpp"
+#include "di_interfaces.hpp"
 #include <boost/algorithm/string.hpp>
 
 namespace ImageProcessor {
@@ -11,10 +12,14 @@ namespace ImageProcessor {
 std::unique_ptr<Action>
 ActionFactory::create_action(ParseMap const parameters) {
   std::string action = find_action(parameters);
-  if (action == "save")
-    return std::unique_ptr<Action>{new Save{parameters["save"].get_string()}};
-  else if (action == "grey")
-    return std::unique_ptr<Action>{new Grey};
+  if (action == "save") {
+    if (parameters["save"].get_string() == "")
+      return std::unique_ptr<Action>{new Save{make_filesystem()}};
+    return std::unique_ptr<Action>{
+        new Save{make_filesystem(), parameters["save"].get_string()}};
+
+  } else if (action == "grey")
+    return std::unique_ptr<Action>{new Grey{make_opencv()}};
   else
     // a double check to ensure action was found. Nothing should reach here
     throw ImageProcessorError("No action found");
@@ -22,8 +27,14 @@ ActionFactory::create_action(ParseMap const parameters) {
 
 std::unique_ptr<Action>
 ActionFactory::create_initial_action(ParseMap const parameters) {
-  return std::unique_ptr<Action>{new Initialise{
-      parameters["image"].get_string(), parameters["output"].get_string()}};
+  if (parameters["output"].get_string() == "")
+    // pass in only image
+    return std::unique_ptr<Action>{
+        new Initialise(make_filesystem(), parameters["image"].get_string())};
+  // pass in image and output folder string
+  return std::unique_ptr<Action>{
+      new Initialise(make_filesystem(), parameters["image"].get_string(),
+                     parameters["output"].get_string())};
 }
 
 // // iterates through key's to find one of the allowed action strings.

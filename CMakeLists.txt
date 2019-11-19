@@ -22,7 +22,12 @@ find_package( Boost
         log
 )
 include_directories( ${Boost_INCLUDE_DIRS})
-find_package( OpenCV REQUIRED )
+
+find_package( OpenCV REQUIRED 
+    core 
+    imgcodecs 
+    highgui
+)
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_subdirectory(src)

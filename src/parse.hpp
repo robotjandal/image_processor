@@ -41,6 +41,7 @@ public:
 
   int size() const { arguments_.size(); };
   void add(std::string const key, std::string const value);
+  void remove(std::string const key);
   std::pair<std::string, Parameter> find(std::string const key) const;
   std::vector<std::string> get_keys(KEYS_CASE const keys_case) const;
 

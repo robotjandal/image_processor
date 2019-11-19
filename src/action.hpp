@@ -3,30 +3,13 @@
 
 #include <string>
 
+#include "di_interfaces.hpp"
 #include "parse.hpp"
+#include "image.hpp"
 #include <boost/filesystem.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
 namespace ImageProcessor {
-
-struct Image {
-  Image(){};
-  Image(cv::Mat const image, std::string const filename,
-        std::string const output_folder)
-      : image_{image}, filename_{boost::filesystem::path{filename}},
-        output_folder_{output_folder} {};
-  Image(cv::Mat const image, boost::filesystem::path const filename,
-        std::string const output_folder)
-      : image_{image}, filename_{filename}, output_folder_{output_folder} {};
-
-  std::string get_filename() const { return filename_.filename().string(); };
-  std::string get_stem() const { return filename_.stem().string(); };
-  std::string get_extension() const { return filename_.extension().string(); };
-
-  cv::Mat image_;
-  boost::filesystem::path filename_;
-  std::string output_folder_{"output"};
-};
 
 class Action {
 public:
@@ -38,38 +21,56 @@ public:
 // loading the image file
 class Initialise : public Action {
 public:
-  Initialise(std::string const input_file, std::string const output_folder)
-      : input_file_{input_file}, output_folder_{output_folder} {};
+  Initialise(IFilesystem *fs, std::string const input_file)
+      : Initialise(fs, input_file, "output"){};
+  Initialise(IFilesystem *fs, std::string const input_file,
+             std::string const output_folder);
+  ~Initialise() { delete fs_; };
 
   Image process(Image);
+  std::string get_input_file() const { return input_file_; };
+  std::string get_output_folder() const { return output_folder_; };
 
 private:
-  std::string input_file_{""};
-  std::string output_folder_{""};
+  IFilesystem *fs_;
+  std::string input_file_;
+  std::string output_folder_;
+  bool recreate_output_folder();
+  bool read_image();
 };
 
 // Save image to file based upon supplied filename otherwise
 // a filename is automatically genereated
 class Save : public Action {
 public:
-  Save(std::string const filename) : filename_{filename} {};
+  Save(IFilesystem *fs) : Save(fs, ""){};
+  Save(IFilesystem *fs, std::string const filename);
+  ~Save() { delete fs_; };
 
-  Image process(Image);
+  Image process(Image image);
   static void reset() { counter_ = 0; };
+  std::string get_filepath() { return path_.string(); };
 
 private:
-  void populate_filename(boost::filesystem::path const filename);
-  std::string build_path(std::string const folder);
+  void process_filename(boost::filesystem::path const image_filename);
+  void build_custom_filename(boost::filesystem::path const image_filename);
+  std::string prefix_folder(std::string const folder);
 
-  boost::filesystem::path filename_{};
-  boost::filesystem::path path_{};
+  IFilesystem *fs_;
+  boost::filesystem::path filename_{}; // set by constructor
+  boost::filesystem::path path_{}; // set by process()
   static int counter_;
 };
 
 // converts image to greyscale
 class Grey : public Action {
 public:
-  Image process(Image);
+  Grey(IOpenCV *opencv);
+  Image process(Image image);
+  ~Grey() { delete cv_; };
+
+  private:
+  IOpenCV *cv_;
 };
 
 } // namespace ImageProcessor

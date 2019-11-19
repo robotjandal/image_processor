@@ -39,20 +39,23 @@ add_executable(unit_tests
     parse_yaml_test.cpp 
     parse_test.cpp
     action_test.cpp
+    di_interfaces_mock.hpp
 )
 
 target_link_libraries(unit_tests 
   PRIVATE
     gtest_main
+    gmock
+    interfaces
     action
     parse
+    image
     factory
     parse_yaml
     ${OpenCV_LIBS}
     Boost::system
     Boost::filesystem
     Boost::log
-
 )
 
 configure_file(data/test_image.png ${CMAKE_CURRENT_BINARY_DIR}/data/test_image.png COPYONLY)
