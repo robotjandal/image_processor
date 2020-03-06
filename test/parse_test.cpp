@@ -166,7 +166,7 @@ TEST_F(ParseMapTest, getValues) {
   EXPECT_EQ(p2_["test1"].get_int(), int(-1));
   EXPECT_EQ(p2_["test2"].get_float(), float(2.2));
   ASSERT_THROW(p1_["key"].get_int(), ImageProcessorError);
-  ASSERT_THROW(p0_["not found"].get_string(), std::out_of_range);
+  ASSERT_THROW(p0_["not found"].get_string(), ImageProcessorError);
 }
 
 // testing finding values and keys through search

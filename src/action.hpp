@@ -4,8 +4,8 @@
 #include <string>
 
 #include "di_interfaces.hpp"
-#include "parse.hpp"
 #include "image.hpp"
+#include "parse.hpp"
 #include <boost/filesystem.hpp>
 #include <opencv4/opencv2/opencv.hpp>
 
@@ -15,6 +15,10 @@ class Action {
 public:
   Action(){};
   virtual Image process(Image) = 0;
+  std::string get_action() { return action_; };
+
+protected:
+  std::string action_;
 };
 
 // Initialise the image by clearing and creating the output folder and
@@ -50,6 +54,7 @@ public:
   Image process(Image image);
   static void reset() { counter_ = 0; };
   std::string get_filepath() { return path_.string(); };
+  std::string get_filename() { return filename_.string(); };
 
 private:
   void process_filename(boost::filesystem::path const image_filename);
@@ -58,7 +63,7 @@ private:
 
   IFilesystem *fs_;
   boost::filesystem::path filename_{}; // set by constructor
-  boost::filesystem::path path_{}; // set by process()
+  boost::filesystem::path path_{};     // set by process()
   static int counter_;
 };
 
@@ -69,7 +74,7 @@ public:
   Image process(Image image);
   ~Grey() { delete cv_; };
 
-  private:
+private:
   IOpenCV *cv_;
 };
 

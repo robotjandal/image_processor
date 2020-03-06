@@ -11,7 +11,9 @@ namespace ImageProcessor {
 
 Initialise::Initialise(IFilesystem *fs, std::string const input_file,
                        std::string const output_folder)
-    : fs_{std::move(fs)}, input_file_{input_file}, output_folder_{output_folder} {
+    : fs_{std::move(fs)}, input_file_{input_file}, output_folder_{
+                                                       output_folder} {
+  action_ = "initialise";
   if (input_file_ == "")
     throw ImageProcessorError("Input file not specified.");
   if (output_folder_ == "")
@@ -36,6 +38,7 @@ Image Initialise::process(Image image) {
 
 Save::Save(IFilesystem *fs, std::string const filename)
     : fs_{std::move(fs)}, filename_{filename} {
+  action_ = "save";
   if (fs_ == nullptr)
     throw ImageProcessorError("fs not a valid pointer");
 }
@@ -93,6 +96,7 @@ std::string Save::prefix_folder(std::string const folder) {
 }
 
 Grey::Grey(IOpenCV *i_opencv) : cv_{std::move(i_opencv)} {
+  action_ = "grey";
   if (cv_ == nullptr)
     throw ImageProcessorError("fs not a valid pointer");
 }

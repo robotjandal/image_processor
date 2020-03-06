@@ -39,6 +39,7 @@ add_executable(unit_tests
     parse_yaml_test.cpp 
     parse_test.cpp
     action_test.cpp
+    action_factory_test.cpp
     di_interfaces_mock.hpp
 )
 

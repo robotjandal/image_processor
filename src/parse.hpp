@@ -35,11 +35,9 @@ public:
   ParseMap(){};
   explicit ParseMap(std::map<std::string, Parameter> const arguments)
       : arguments_{arguments} {};
-  Parameter operator[](std::string const key) const {
-    return arguments_.at(key);
-  };
+  Parameter operator[](std::string const key) const;
 
-  int size() const { arguments_.size(); };
+  int size() const { return arguments_.size(); };
   void add(std::string const key, std::string const value);
   void remove(std::string const key);
   std::pair<std::string, Parameter> find(std::string const key) const;

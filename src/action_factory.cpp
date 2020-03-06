@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "exceptions.hpp"
 #include "di_interfaces.hpp"
+#include "exceptions.hpp"
 #include <boost/algorithm/string.hpp>
 
 namespace ImageProcessor {

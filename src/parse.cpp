@@ -43,6 +43,15 @@ bool Parameter::get_bool() const {
 // ParseMap
 ////
 
+// returning Parameter if key is found else an exception is thrown
+Parameter ParseMap::operator[](std::string const key) const {
+  try {
+    return arguments_.at(key);
+  } catch (const std::out_of_range &err) {
+    throw ImageProcessorError("Error: key not found");
+  }
+}
+
 // adding key value pair where the key defaults to lowercase
 void ParseMap::add(std::string const key, std::string const value) {
   arguments_.insert(std::pair<std::string, Parameter>(boost::to_lower_copy(key),
