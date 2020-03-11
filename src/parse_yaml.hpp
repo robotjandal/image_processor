@@ -9,11 +9,12 @@ namespace ImageProcessor {
 
 class YamlParser {
 public:
-  YamlParser(std::string const input_file) : file_path_{input_file} {};
+  YamlParser(std::string const input_file);
+  YamlParser(YAML::Node config) : yaml_{config} {};
   std::vector<std::unique_ptr<Action>> parse() const;
 
 private:
-  std::string const file_path_;
+  YAML::Node yaml_;
 };
 
 class YamlNode {

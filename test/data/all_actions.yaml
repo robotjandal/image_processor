@@ -1,0 +1,5 @@
+image: ./data/test_image.png
+output: output
+actions:
+  - grey
+  - save

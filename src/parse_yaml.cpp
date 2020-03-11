@@ -8,13 +8,16 @@ namespace ImageProcessor {
 
 // Yaml Parse
 ////
+YamlParser::YamlParser(std::string input_file) {
+  yaml_ = YAML::LoadFile(input_file);
+}
 
 // Convert yaml file into a vector of actions
 std::vector<std::unique_ptr<Action>> YamlParser::parse() const {
   std::vector<std::unique_ptr<Action>> actions_list;
-  YAML::Node const config = YAML::LoadFile(file_path_);
+  // YAML::Node const config = YAML::LoadFile(file_path_);
   // The set of outermost mappings in the yaml file are considered an action
-  YamlNode initial_node{config};
+  YamlNode initial_node{yaml_};
   ActionFactory factory;
   initial_node.process();
   actions_list.push_back(
@@ -33,6 +36,7 @@ std::vector<std::unique_ptr<Action>> YamlParser::parse() const {
   }
   if (!initial_node.has_found_actions() || count == 0) {
     BOOST_LOG_TRIVIAL(warning) << "No actions found";
+    throw ImageProcessorError("Error: Parsing .yaml file");
   }
   if (actions_list.size() == (count + 1))
     return actions_list;
@@ -71,6 +75,7 @@ void YamlNode::process() {
       }
     }
     break;
+  // can only handle Maps or Scalars at present
   case YAML::NodeType::Sequence:
     BOOST_LOG_TRIVIAL(warning) << "Sequence cannot be analysed";
   case YAML::NodeType::Null:

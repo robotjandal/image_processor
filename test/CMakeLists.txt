@@ -57,9 +57,11 @@ target_link_libraries(unit_tests
     Boost::system
     Boost::filesystem
     Boost::log
+    yaml-cpp
 )
 
 configure_file(data/test_image.png ${CMAKE_CURRENT_BINARY_DIR}/data/test_image.png COPYONLY)
+configure_file(data/all_actions.yaml ${CMAKE_CURRENT_BINARY_DIR}/data/all_actions.yaml COPYONLY)
 # add_test(NAME unit_tests COMMAND unit_tests)
 gtest_discover_tests(unit_tests)
 # add_test(Name ParameterTest COMMAND unit_tests)
