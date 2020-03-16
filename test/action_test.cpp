@@ -40,6 +40,10 @@ TEST_F(ImageTest, loadFile) {
   EXPECT_EQ(im1_.image_.cols, 10);
 }
 
+TEST_F(ImageTest, imageExists) {
+  EXPECT_EQ(im1_.image_exists(), true);
+}
+
 class InitialiseTest : public ::testing::Test {
 protected:
   void SetUp() override {

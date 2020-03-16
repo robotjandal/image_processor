@@ -30,6 +30,7 @@ void ImageProcessor::init() const {
 void ImageProcessor::run() {
   this->parse_file();
   this->perform_actions();
+  this->delete_actions();
 }
 
 // process action from list
@@ -39,6 +40,11 @@ void ImageProcessor::perform_actions() {
   for (auto const &action : actions_list_) {
     image_ = action->process(image_);
   }
+}
+
+void ImageProcessor::delete_actions() {
+  cout << "Removing actions" << endl;
+  actions_list_.clear();
 }
 
 // process input file and populate actions vector

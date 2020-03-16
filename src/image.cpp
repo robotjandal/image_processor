@@ -12,4 +12,11 @@ bool Image::operator==(const Image &other) const {
   return false;
 }
 
+// return true if image exists otherwise return false
+bool Image::image_exists() const {
+  if (image_.empty())
+    return false;
+  return true;
 }
+
+} // namespace ImageProcessor

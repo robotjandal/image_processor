@@ -59,9 +59,7 @@ void ParseMap::add(std::string const key, std::string const value) {
 }
 
 // remove key value pair by key.
-void ParseMap::remove(std::string const key) {
-  arguments_.erase(key);
-}
+void ParseMap::remove(std::string const key) { arguments_.erase(key); }
 
 // Find returns both the key and value as a pair
 std::pair<std::string, Parameter> ParseMap::find(std::string const key) const {

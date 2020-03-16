@@ -23,6 +23,7 @@ private:
   bool is_yaml() const;
   void parse_file();
   void perform_actions();
+  void delete_actions();
 };
 
 } // namespace ImageProcessor

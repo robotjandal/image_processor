@@ -1,6 +1,7 @@
 #include <boost/filesystem.hpp>
 
 #include "action_factory.hpp"
+#include "exceptions.hpp"
 #include "action.hpp"
 #include <gtest/gtest.h>
 
@@ -46,6 +47,12 @@ TEST_F(ActionFactoryTest, createGreyAction)
     std::unique_ptr<Action> action_ptr = factory_.create_action(parameters_);
     Grey *initialise_ptr = dynamic_cast<Grey *>(action_ptr.release());
     EXPECT_EQ(initialise_ptr->get_action(), "grey");
+}
+
+TEST_F(ActionFactoryTest, ErrorWrongAction)
+{
+    parameters_.add("fail", "");
+    EXPECT_THROW(factory_.create_action(parameters_), ImageProcessorError);
 }
 
 } // namespace
